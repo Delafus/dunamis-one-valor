@@ -28,8 +28,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--dark);-webkit-font
 /* NAV */
 nav{
   display:flex;align-items:center;justify-content:space-between;
-  padding:16px 48px;background:#0A0A0A;
-  border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:100;
+  padding:16px 48px;background:#F2F0EC;
+  border-bottom:1px solid rgba(0,0,0,.08);position:sticky;top:0;z-index:100;
 }
 .logo{display:flex;align-items:center;gap:0;text-decoration:none}
 .logo-brand{font-family:var(--sans);font-size:13px;font-weight:700;color:var(--white);letter-spacing:2px;text-transform:uppercase}
@@ -37,7 +37,7 @@ nav{
 .logo-divider{color:rgba(255,255,255,.25);margin:0 12px;font-size:13px;font-weight:300}
 .logo-product{font-family:var(--sans);font-size:13px;font-weight:400;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase}
 .nav-tag{font-size:11px;font-weight:400;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
-.nav-tag::before{content:'●';color:var(--red);font-size:8px}
+
 
 /* HERO RESULT — siempre visible */
 .hero-result{position:sticky;top:0;z-index:90;
@@ -256,7 +256,7 @@ tr:hover td{background:var(--bg)}
 .splash-brand{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:var(--dark);letter-spacing:.08em;text-transform:uppercase}
 .splash-brand span{color:var(--red)}
 .splash-status{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mid);letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
-.splash-status::before{content:'●';color:var(--red);font-size:8px}
+.splash-status::before{content:'';}
 .splash-tag{display:none}
 .splash-center{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:780px;padding:48px 0 32px;margin:0 auto;width:100%}
 .splash-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--red);margin-bottom:24px;display:flex;align-items:center;gap:10px}
@@ -312,6 +312,19 @@ tr:hover td{background:var(--bg)}
   .hr-kpis{flex-wrap:wrap;}
   .hr-kpi{flex:1;min-width:80px;}
 }
+
+.sticky-footer{
+  position:sticky;bottom:0;z-index:90;
+  background:#0A0A0A;
+  padding:12px 48px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;color:#999;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.sticky-footer a{color:#C8202C;text-decoration:none;font-weight:700;}
+@media(max-width:600px){.sticky-footer{padding:12px 20px;}}
 </style>
 </head>
 <body>
@@ -319,7 +332,7 @@ tr:hover td{background:var(--bg)}
 
 <div id="splash">
   <div class="splash-nav">
-    <div class="splash-brand">LA VALORACIÓN &nbsp;<span style="font-size:9px">●</span></div>
+    <div class="splash-brand">LA VALORACIÓN</div>
     <div class="splash-status">Análisis activo</div>
   </div>
 
@@ -345,10 +358,8 @@ tr:hover td{background:var(--bg)}
   </div></div>
 
 <nav>
-  <div class="logo">
-    <span class="logo-brand">LA VALORACIÓN &nbsp;<span class="logo-dot" style="font-size:10px">●</span></span>
-  </div>
-  <span class="nav-tag">Análisis activo</span>
+  <a href="#" onclick="document.getElementById('splash').style.display='flex';return false;" style="text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#1E1E1E;letter-spacing:.08em;text-transform:uppercase;">LA VALORACIÓN</a>
+  <a href="https://www.dunamis.broker" target="_blank" style="display:flex;align-items:center;gap:4px;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.1em;color:#C8202C;"><svg style="display:inline-block;vertical-align:middle;width:14px;height:14px;margin:0 4px;" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg"><path d="M1025.221,809.212l-0.11,0l0,81.085c0,28.636 -10.8,55.209 -31.8,75.424c-21.177,20.215 -49.53,31.502 -79.281,31.502l-627.255,-0c-29.747,0 -58.286,-11.287 -79.268,-31.502c-21.004,-20.215 -32.726,-47.673 -32.726,-76.309l0,-428.208c0,-36.048 18.716,-69.739 49.867,-89.786c74.023,-47.503 232.776,-149.249 313.62,-201.133c37.627,-24.088 86.641,-24.088 124.267,0c80.857,51.885 239.595,153.631 313.626,201.133c27.372,17.614 45.15,45.762 49.061,76.787l0,361.008Zm-424.738,28.542c62.258,0 111.248,-23.16 146.913,-69.476c30.045,-38.496 45.224,-84.812 45.538,-138.952c0.314,-54.454 -14.238,-101.084 -43.654,-139.891c-35.038,-46.319 -83.571,-69.476 -145.515,-69.476l-196.702,0c14.409,64.155 21.599,133.788 21.599,208.897c0,75.108 -7.19,144.742 -21.599,208.899l193.421,0Zm-81.688,-88.253l0,-131.443c0,-50.385 9.473,-93.338 28.39,-128.861c18.945,-35.52 43.112,-53.278 72.529,-53.278c5.621,0 10.785,0.625 15.493,1.877c22.227,5.007 39.203,24.175 50.93,57.504c11.727,33.331 14.323,78.318 7.761,134.964c-6.591,56.018 -23.339,102.023 -50.245,138.014c-26.906,35.988 -53.184,53.983 -78.863,53.983c-13.781,0 -24.88,-6.103 -33.326,-18.306c-8.446,-12.206 -12.668,-30.358 -12.668,-54.454Z" style="fill:#ed2739;"/></svg> DUNAMIS BROKER</a>
 </nav>
 
 <!-- RESULTADO SIEMPRE VISIBLE -->
@@ -455,7 +466,7 @@ tr:hover td{background:var(--bg)}
           <span class="slider-label">Estacionamientos</span>
           <span class="slider-value" id="lbl-estac">1<span class="slider-unit"></span></span>
         </div>
-        <input type="range" id="estac" min="0" max="3" step="1" value="1" oninput="syncSlider(this,'lbl-estac','');calcular()">
+        <input type="range" id="estac" min="0" max="8" step="1" value="1" oninput="syncSlider(this,'lbl-estac','');calcular()">
       </div>
       <div class="check-row">
         <div class="check-box"><input type="checkbox" id="ck-bodega" onchange="calcular()" checked><label for="ck-bodega">+ Bodega</label></div>
@@ -894,5 +905,9 @@ window.onload=()=>{
   document.querySelectorAll('input[type=range]').forEach(el=>syncSlider(el,el.id==='m2util'?'lbl-m2util':el.id==='terraza'?'lbl-terraza':el.id==='estac'?'lbl-estac':el.id==='m2const'?'lbl-const':el.id==='m2terreno'?'lbl-terreno':'lbl-terrenom2',el.id==='estac'?'':'m²'));
 };
 </script>
+
+<div class="sticky-footer">
+  UN PRODUCTO <svg style="display:inline-block;vertical-align:middle;width:14px;height:14px;margin:0 4px;" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg"><path d="M1025.221,809.212l-0.11,0l0,81.085c0,28.636 -10.8,55.209 -31.8,75.424c-21.177,20.215 -49.53,31.502 -79.281,31.502l-627.255,-0c-29.747,0 -58.286,-11.287 -79.268,-31.502c-21.004,-20.215 -32.726,-47.673 -32.726,-76.309l0,-428.208c0,-36.048 18.716,-69.739 49.867,-89.786c74.023,-47.503 232.776,-149.249 313.62,-201.133c37.627,-24.088 86.641,-24.088 124.267,0c80.857,51.885 239.595,153.631 313.626,201.133c27.372,17.614 45.15,45.762 49.061,76.787l0,361.008Zm-424.738,28.542c62.258,0 111.248,-23.16 146.913,-69.476c30.045,-38.496 45.224,-84.812 45.538,-138.952c0.314,-54.454 -14.238,-101.084 -43.654,-139.891c-35.038,-46.319 -83.571,-69.476 -145.515,-69.476l-196.702,0c14.409,64.155 21.599,133.788 21.599,208.897c0,75.108 -7.19,144.742 -21.599,208.899l193.421,0Zm-81.688,-88.253l0,-131.443c0,-50.385 9.473,-93.338 28.39,-128.861c18.945,-35.52 43.112,-53.278 72.529,-53.278c5.621,0 10.785,0.625 15.493,1.877c22.227,5.007 39.203,24.175 50.93,57.504c11.727,33.331 14.323,78.318 7.761,134.964c-6.591,56.018 -23.339,102.023 -50.245,138.014c-26.906,35.988 -53.184,53.983 -78.863,53.983c-13.781,0 -24.88,-6.103 -33.326,-18.306c-8.446,-12.206 -12.668,-30.358 -12.668,-54.454Z" style="fill:#ed2739;"/></svg> <a href="https://www.dunamis.broker" target="_blank">DUNAMIS BROKER</a>
+</div>
 </body>
 </html>
