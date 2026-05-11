@@ -258,7 +258,7 @@ tr:hover td{background:var(--bg)}
 .splash-tag{display:none}
 .splash-center{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:780px;padding:48px 0 32px}
 .splash-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--red);margin-bottom:24px;display:flex;align-items:center;gap:10px}
-.splash-title{font-family:'Bricolage Grotesque',sans-serif;font-size:56px;font-weight:800;color:var(--dark);line-height:1.05;margin-bottom:16px;letter-spacing:-1px}
+.splash-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(36px,8vw,56px);font-weight:800;color:var(--dark);line-height:1.05;margin-bottom:16px;letter-spacing:-1px}
 .splash-title em{font-style:italic;color:var(--red)}
 .splash-subtitle{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:700;color:var(--dark);margin-bottom:24px;letter-spacing:-0.3px}
 .splash-desc{font-size:17px;color:var(--mid);line-height:1.7;max-width:560px;margin-bottom:40px;font-weight:300}
@@ -294,12 +294,10 @@ tr:hover td{background:var(--bg)}
 
   <div class="splash-center">
     <div class="splash-eyebrow">▸ &nbsp;Simulador · Tiempo real</div>
-    <div class="splash-title">¿Cuánto vale<br>tu <em>propiedad</em>?</div>
+    <div class="splash-title">¿Cuánto vale tu <em>propiedad</em>?</div>
     <div class="splash-subtitle">El precio no es una opinión.</div>
     <div class="splash-desc">
-      Depende de la comuna, la tipología y las variables del mercado real. 
-      Este simulador cruza esos datos y te entrega un estimativo honesto — 
-      sin rangos vagos ni cifras de catálogo.
+      Cruza variables de mercado real y te entrega un estimativo honesto — sin rangos vagos ni cifras de catálogo.
     </div>
     <div class="meta-row">
       <div class="meta-item"><span class="meta-lbl">Comunas</span><span class="meta-val">17</span></div>
