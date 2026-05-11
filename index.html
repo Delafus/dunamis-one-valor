@@ -283,12 +283,33 @@ tr:hover td{background:var(--bg)}
 .meta-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--mid);text-transform:uppercase}
 .meta-val{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:var(--dark)}
 
+
+  .splash-nav{padding-bottom:16px;}
+  .splash-center{padding:32px 0 24px;}
+  .splash-footer{padding-top:16px;}
+  .meta-row{gap:20px;}
+}
+
 @media(max-width:600px){
   #splash{padding:24px 24px;}
   .splash-nav{padding-bottom:16px;}
   .splash-center{padding:32px 0 24px;}
   .splash-footer{padding-top:16px;}
   .meta-row{gap:20px;}
+  .chips{gap:4px;}
+  .chip label{padding:5px 9px;font-size:11px;}
+  table{font-size:11px;}
+  th{padding:8px 10px;font-size:9px;}
+  td{padding:9px 10px;}
+  .table-block{overflow-x:auto;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+  .kpi-item:nth-child(2){border-right:none;}
+  .fin-inputs{grid-template-columns:1fr 1fr;}
+  .metrics-row{grid-template-columns:1fr 1fr;}
+  .hero-result{padding:28px 20px;}
+  .hr-uf{font-size:48px;}
+  .hr-kpis{flex-wrap:wrap;}
+  .hr-kpi{flex:1;min-width:80px;}
 }
 </style>
 </head>
@@ -599,7 +620,7 @@ tr:hover td{background:var(--bg)}
   </div>
 
   <!-- TABLA CONTEXTO -->
-  <div class="table-block">
+  <div class="table-block" style="overflow-x:auto;">
     <div class="table-header">
       <h2 id="tbl-title">Contexto de mercado</h2>
       <p class="sub">Valores UF/m² y cap rate por comuna. Ordenados por rentabilidad.</p>
