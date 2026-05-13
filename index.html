@@ -655,7 +655,19 @@ tr:hover td{background:var(--bg)}
 </div>
 
 <script>
-const UF = 38500;
+let UF = 38500; // fallback
+
+async function fetchUF() {
+  try {
+    const res = await fetch('https://mindicador.cl/api/uf');
+    const data = await res.json();
+    UF = data.serie[0].valor;
+    console.log('UF del día:', UF);
+    calcular();
+  } catch(e) {
+    console.warn('No se pudo obtener UF, usando valor de respaldo:', UF);
+  }
+}
 const DB = {
   RM:{
     chicureo:{n:"Chicureo — Sector Elite",d:88,s:14,cap:3.8,spd:"12-18 m"},
@@ -908,6 +920,7 @@ function fmtCLP(n){return '$'+Math.round(n).toLocaleString('es-CL')}
 
 // Init
 window.onload=()=>{
+  fetchUF();
   cargarComunas();cambiarTipo();
   document.querySelectorAll('input[type=range]').forEach(el=>syncSlider(el,el.id==='m2util'?'lbl-m2util':el.id==='terraza'?'lbl-terraza':el.id==='estac'?'lbl-estac':el.id==='m2const'?'lbl-const':el.id==='m2terreno'?'lbl-terreno':'lbl-terrenom2',el.id==='estac'?'':'m²'));
 };
