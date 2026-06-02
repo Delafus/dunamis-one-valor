@@ -403,15 +403,15 @@ tr:hover td{background:var(--bg)}
       <div class="step-num">1</div>
       <div class="step-title">Ubicación</div>
     </div>
-    <div class="sel-group">
+    <div class="sel-group" id="grp-region">
       <label class="sel-label">Región</label>
-      <select id="region" onchange="cargarComunas()">
+      <select id="region" onchange="cargarUbicaciones()">
         <option value="RM">Región Metropolitana</option>
         <option value="VALPO">Valparaíso</option>
       </select>
     </div>
     <div class="sel-group">
-      <label class="sel-label">Comuna</label>
+      <label class="sel-label" id="lbl-ubic">Comuna</label>
       <select id="comuna" onchange="calcular()"></select>
     </div>
     <div class="sel-group">
@@ -646,7 +646,7 @@ tr:hover td{background:var(--bg)}
       <p class="sub">Valores UF/m² y cap rate por comuna. Ordenados por rentabilidad.</p>
     </div>
     <table>
-      <thead><tr><th>Comuna</th><th>UF/m² Depto</th><th>UF/m² Suelo</th><th>Cap Rate</th></tr></thead>
+      <thead id="tbl-head"><tr><th>Comuna</th><th>UF/m² Depto</th><th>UF/m² Suelo</th><th>Cap Rate</th></tr></thead>
       <tbody id="tbl-body"></tbody>
     </table>
   </div>
@@ -655,7 +655,7 @@ tr:hover td{background:var(--bg)}
 </div>
 
 <script>
-let UF = 38500; // fallback
+let UF = 40600; // fallback aprox. jun-2026; se sobrescribe con el dato en vivo
 
 async function fetchUF() {
   try {
@@ -694,12 +694,22 @@ const DB = {
     concon:{n:"Concón",d:90,s:30,cap:4.0,spd:"10-14 m"},
     quilpue:{n:"Quilpué",d:45,s:10,cap:6.0,spd:"5-8 m"},
     villa_a:{n:"Villa Alemana",d:38,s:8,cap:6.5,spd:"4-6 m"},
+  },
+  OFICINAS:{
+    el_golf:{n:"El Golf",d:106,arr:0.62,vac:8.9,cap:7.0,spd:"10-15 m"},
+    apoquindo:{n:"Apoquindo",d:103,arr:0.60,vac:6.9,cap:7.0,spd:"10-15 m"},
+    nueva_lc:{n:"Nueva Las Condes",d:96,arr:0.56,vac:4.4,cap:7.0,spd:"8-12 m"},
+    vitacura:{n:"Vitacura",d:81,arr:0.49,vac:7.5,cap:7.25,spd:"10-14 m"},
+    providencia:{n:"Providencia",d:72,arr:0.48,vac:17.7,cap:8.0,spd:"6-10 m"},
+    stgo_centro:{n:"Santiago Centro",d:45,arr:0.32,vac:11.3,cap:8.5,spd:"4-8 m"},
+    huechuraba:{n:"Huechuraba",d:45,arr:0.30,vac:9.8,cap:8.0,spd:"5-9 m"},
   }
 };
 const CAL={estandar:38,premium:55,basica:25};
 const EXT={estac:380,bodega:100,piscina:350,quincho:150};
 
 let currentUF=0, currentCap=0, currentArriendo=0, finMode='cash', proyChart;
+let wasOffice=false;
 
 function syncSlider(el,lblId,unit){
   const pct=((el.value-el.min)/(el.max-el.min))*100;
@@ -724,30 +734,37 @@ function cambiarTipo(){
   document.getElementById('grp-terreno').style.display=t==='terreno'?'block':'none';
   document.getElementById('grp-terraza').style.display=t==='oficina'?'none':'block';
   document.getElementById('casa-extras').style.display=t==='bodega'?'none':'block';
-  calcular();
+  const isOf=t==='oficina';
+  if(isOf!==wasOffice){wasOffice=isOf;cargarUbicaciones();}else{calcular();}
 }
 
-function cargarComunas(){
+function cargarUbicaciones(){
+  const isOf=getTipo()==='oficina';
+  document.getElementById('grp-region').style.display=isOf?'none':'block';
+  document.getElementById('lbl-ubic').textContent=isOf?'Submercado':'Comuna';
   const r=document.getElementById('region').value;
+  const key=isOf?'OFICINAS':r;
   const sel=document.getElementById('comuna');
   sel.innerHTML='';
-  Object.entries(DB[r]).forEach(([k,v])=>{
+  Object.entries(DB[key]).forEach(([k,v])=>{
     const o=document.createElement('option');
     o.value=k;o.textContent=v.n;sel.appendChild(o);
   });
-  document.getElementById('tbl-title').textContent='Contexto — '+(r==='RM'?'Región Metropolitana':'Valparaíso');
-  llenarTabla(r);calcular();
+  document.getElementById('tbl-title').textContent='Contexto — '+(isOf?'Oficinas Clase A · 1T 2026':(r==='RM'?'Región Metropolitana':'Valparaíso'));
+  llenarTabla(key);calcular();
 }
 
 function calcular(){
+  const tipo=getTipo();
+  const isOf=tipo==='oficina';
   const r=document.getElementById('region').value;
   const ck=document.getElementById('comuna').value;
   if(!ck)return;
-  const d=DB[r][ck];
+  const d=isOf?DB.OFICINAS[ck]:DB[r][ck];
+  if(!d)return;
   const f=parseFloat(document.getElementById('sector').value)||1;
-  const tipo=getTipo();
   let ufTotal=0,capRate=d.cap,spd=d.spd;
-  const ufS=d.s*f, ufD=d.d*f;
+  const ufS=(d.s||0)*f, ufD=d.d*f;
 
   if(tipo.startsWith('depto')||tipo==='oficina'){
     const m2u=+document.getElementById('m2util').value||0;
@@ -757,8 +774,7 @@ function calcular(){
     const cal=document.getElementById('calidad-v').value;
     const mT=tipo==='depto_est'?1.15:tipo==='depto_fam'?0.9:1.0;
     const mC=cal==='premium'?1.15:cal==='basica'?0.85:1.0;
-    const pm2=ufD*mT*mC*(tipo==='oficina'?0.95:1);
-    if(tipo==='oficina'){capRate*=0.9;spd="10-15 m";}
+    const pm2=ufD*mT*mC;
     ufTotal=(m2u*pm2)+(m2t*pm2*0.5)+(est*EXT.estac)+(bod?EXT.bodega:0);
   } else if(tipo==='casa'||tipo==='bodega'){
     const m2c=+document.getElementById('m2const').value||0;
@@ -888,11 +904,16 @@ function actualizarProyeccion(arriendoMens,ufTotal,dividendo){
 }
 
 function llenarTabla(r){
+  const isOf=r==='OFICINAS';
+  document.getElementById('tbl-head').innerHTML=isOf
+    ? '<tr><th>Submercado</th><th>Venta UF/m²</th><th>Arriendo UF/m²</th><th>Cap Rate</th></tr>'
+    : '<tr><th>Comuna</th><th>UF/m² Depto</th><th>UF/m² Suelo</th><th>Cap Rate</th></tr>';
   const body=document.getElementById('tbl-body');
   body.innerHTML='';
   Object.values(DB[r]).sort((a,b)=>b.cap-a.cap).forEach(c=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td class="td-bold">${c.n}</td><td>${c.d} UF</td><td style="color:var(--mid)">${c.s} UF</td><td class="${c.cap>6?'td-red':'td-green'}">${c.cap}%</td>`;
+    const col3=isOf?`${c.arr} UF`:`${c.s} UF`;
+    tr.innerHTML=`<td class="td-bold">${c.n}</td><td>${c.d} UF</td><td style="color:var(--mid)">${col3}</td><td class="${c.cap>6?'td-red':'td-green'}">${c.cap}%</td>`;
     body.appendChild(tr);
   });
 }
@@ -921,7 +942,7 @@ function fmtCLP(n){return '$'+Math.round(n).toLocaleString('es-CL')}
 // Init
 window.onload=()=>{
   fetchUF();
-  cargarComunas();cambiarTipo();
+  cargarUbicaciones();cambiarTipo();
   document.querySelectorAll('input[type=range]').forEach(el=>syncSlider(el,el.id==='m2util'?'lbl-m2util':el.id==='terraza'?'lbl-terraza':el.id==='estac'?'lbl-estac':el.id==='m2const'?'lbl-const':el.id==='m2terreno'?'lbl-terreno':'lbl-terrenom2',el.id==='estac'?'':'m²'));
 };
 </script>
