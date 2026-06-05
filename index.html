@@ -176,7 +176,7 @@ select:focus{border-color:var(--red)}
 
 /* USER SCENARIO */
 .user-scenario{background:var(--pink);border-radius:12px;padding:20px;margin-bottom:20px}
-.user-scenario h3{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--dark);margin-bottom:12px}
+.user-scenario h3{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--dark);margin-bottom:12px}
 .user-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
 .user-field label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.8px;color:var(--mid);display:block;margin-bottom:5px}
 .user-field input{
@@ -338,6 +338,42 @@ tr:hover td{background:var(--bg)}
 <body>
 
 
+<style>
+#pdf-sheet{display:none}
+@media print{
+  @page{margin:16mm}
+  body{background:#fff !important}
+  body > *:not(#pdf-sheet){display:none !important}
+  #pdf-sheet{display:block !important}
+}
+#pdf-sheet{-webkit-print-color-adjust:exact;print-color-adjust:exact;font-family:'DM Sans',sans-serif;color:#1a1a1a;background:#fff;max-width:720px;margin:0 auto}
+.pdf-logo{height:42px;width:auto;display:block}
+.pdf-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#C8202C;font-weight:600;margin-top:18px}
+.pdf-h1{font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:800;color:#1a1a1a;margin:2px 0}
+.pdf-meta{font-size:12px;color:#777;margin-bottom:8px}
+.pdf-section-t{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#999;font-weight:600;margin:22px 0 10px;border-bottom:1px solid #e5e5e5;padding-bottom:6px}
+.pdf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px}
+.pdf-kv .k{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.04em}
+.pdf-kv .v{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;color:#1a1a1a}
+.pdf-kv .v.red{color:#C8202C}
+.pdf-concl p{font-size:14px;line-height:1.65;color:#333;margin:0 0 10px}
+.pdf-verdict{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:800;color:#1a1a1a;background:#FFE4E6;border-left:3px solid #C8202C;padding:12px 16px;border-radius:0 8px 8px 0;margin-top:4px}
+.pdf-cta{margin-top:24px;border:1px solid #e5e5e5;border-top:3px solid #C8202C;border-radius:10px;padding:18px}
+.pdf-cta .t{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:800}
+.pdf-cta .c{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#444;margin-top:8px;line-height:1.7}
+.pdf-foot{margin-top:20px;font-size:10px;color:#999;line-height:1.5;border-top:1px solid #eee;padding-top:10px}
+.btn-pdf{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:#2D2D2D;color:#fff;border:none;border-radius:8px;padding:12px 22px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.btn-pdf:hover{opacity:.9}
+.pdf-capture{margin-top:18px;border-top:1px solid rgba(0,0,0,.08);padding-top:16px}
+.pdf-cap-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--dark)}
+.pdf-cap-sub{font-size:12.5px;color:var(--gray);line-height:1.55;margin:4px 0 12px;font-weight:300}
+.pdf-cap-row{display:flex;gap:8px;flex-wrap:wrap}
+.pdf-cap-input{flex:1;min-width:180px;border:1px solid var(--line);border-radius:8px;padding:11px 14px;font-size:14px;font-family:'DM Sans',sans-serif;background:#fff;color:var(--dark)}
+.pdf-cap-input:focus{outline:none;border-color:#C8202C}
+.pdf-capture .btn-pdf{margin-top:0}
+.pdf-cap-skip{display:inline-block;margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--gray);text-decoration:underline;cursor:pointer}
+.pdf-cap-msg{font-size:12px;margin-top:10px;min-height:14px}
+</style>
 <div id="splash">
   <div class="splash-nav">
     <div class="splash-brand">VALOR</div>
@@ -620,6 +656,16 @@ tr:hover td{background:var(--bg)}
         <div id="u-diag"><span class="badge" style="background:rgba(255,255,255,.6);color:var(--mid)">Ingresa datos</span></div>
         <div class="user-stat-label" style="margin-top:6px">Diagnóstico</div>
       </div>
+    </div>
+    <div class="pdf-capture">
+      <div class="pdf-cap-title">Descarga tu análisis</div>
+      <div class="pdf-cap-sub">Lo bajas al instante. Si dejas tu correo, te enviamos además una copia con el contexto de tu zona.</div>
+      <div class="pdf-cap-row">
+        <input type="email" id="lead-email" class="pdf-cap-input" placeholder="tu@correo.cl" autocomplete="email">
+        <button class="btn-pdf" onclick="enviarYDescargar()">Enviar y descargar</button>
+      </div>
+      <a class="pdf-cap-skip" onclick="descargarAnalisis();return false;">Descargar sin dejar correo</a>
+      <div id="lead-msg" class="pdf-cap-msg"></div>
     </div>
   </div>
 
@@ -940,16 +986,164 @@ Incluye: título en mayúsculas, párrafo intro que destaque la rentabilidad, li
 function fmt(n){return new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP',minimumFractionDigits:0}).format(n)}
 function fmtCLP(n){return '$'+Math.round(n).toLocaleString('es-CL')}
 
+function enviarYDescargar(){
+  const email=(document.getElementById('lead-email').value||'').trim();
+  const msg=document.getElementById('lead-msg');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    msg.style.color='#C8202C';
+    msg.textContent='Ingresa un correo válido, o usa "Descargar sin dejar correo".';
+    return;
+  }
+  const cn=document.getElementById('comuna').options[document.getElementById('comuna').selectedIndex]?.text||'';
+  const tn=document.querySelector('input[name=tipo]:checked')?.closest('.chip')?.querySelector('label')?.textContent?.trim()||'';
+  const uPrecio=parseFloat(document.getElementById('u-precio').value)||0;
+  const payload={
+    email:email,
+    origen:'VALOR — Simulador de valorización',
+    comuna:cn,
+    tipologia:tn,
+    tu_precio_uf:uPrecio>0?uPrecio:'(no ingresado)',
+    valor_estimado_uf:Math.round(currentUF),
+    _subject:'Nuevo lead VALOR — '+cn
+  };
+  msg.style.color='var(--gray)';
+  msg.textContent='Enviando...';
+  fetch('https://formspree.io/f/xnjynevp',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(()=>{
+    msg.style.color='#1a7f37';
+    msg.textContent='Listo. Jessica te enviará una copia. Descargando tu análisis...';
+  }).catch(()=>{
+    msg.style.color='var(--gray)';
+    msg.textContent='Descargando tu análisis...';
+  }).finally(()=>{
+    descargarAnalisis();
+  });
+}
+
+function _fmtUF(n){return Math.round(n).toLocaleString('es-CL');}
+
+function descargarAnalisis(){
+  if(!currentUF||currentUF<=0){return;}
+  const isOf=getTipo()==='oficina';
+  const ck=document.getElementById('comuna').value;
+  const region=document.getElementById('region').value;
+  const d=isOf?DB.OFICINAS[ck]:DB[region][ck];
+  if(!d){return;}
+  const refCap=d.cap;
+  const cn=document.getElementById('comuna').options[document.getElementById('comuna').selectedIndex]?.text||'';
+  const tn=document.querySelector('input[name=tipo]:checked')?.closest('.chip')?.querySelector('label')?.textContent?.trim()||'';
+  const tipo=getTipo();
+  const supId=tipo==='terreno'?'m2terreno':(tipo==='casa'||tipo==='bodega')?'m2const':'m2util';
+  const sup=parseFloat(document.getElementById(supId)?.value)||0;
+  const uPrecio=parseFloat(document.getElementById('u-precio').value)||0;
+  const uArr=parseFloat(document.getElementById('u-arriendo').value)||0;
+
+  document.getElementById('pdf-fecha').textContent='Generado el '+new Date().toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('pdf-resumen').innerHTML=`<b>${tn}</b> en <b>${cn}</b>${sup>0?` · ${sup} m²`:''}.`;
+
+  let cifras=`
+    <div class="pdf-kv"><div class="k">Valor de mercado estimado</div><div class="v red">UF ${_fmtUF(currentUF)}</div></div>
+    <div class="pdf-kv"><div class="k">Equivalente en pesos</div><div class="v">${fmtCLP(currentUF*UF)}</div></div>
+    <div class="pdf-kv"><div class="k">Cap rate de referencia (zona)</div><div class="v">${refCap}%</div></div>
+    <div class="pdf-kv"><div class="k">Arriendo estimado</div><div class="v">${fmtCLP(currentArriendo)}</div></div>`;
+  if(uPrecio>0){
+    const diff=((uPrecio-currentUF)/currentUF)*100;
+    cifras+=`
+    <div class="pdf-kv"><div class="k">Tu precio</div><div class="v">UF ${_fmtUF(uPrecio)}</div></div>
+    <div class="pdf-kv"><div class="k">Brecha vs valor estimado</div><div class="v red">${diff>0?'+':''}${diff.toFixed(1)}%</div></div>`;
+  }
+  if(uPrecio>0&&uArr>0){
+    const tuCap=(uArr*12)/(uPrecio*UF)*100;
+    cifras+=`
+    <div class="pdf-kv"><div class="k">Tu arriendo</div><div class="v">${fmtCLP(uArr)}</div></div>
+    <div class="pdf-kv"><div class="k">Tu cap rate</div><div class="v">${tuCap.toFixed(2)}%</div></div>`;
+  }
+  document.getElementById('pdf-cifras').innerHTML=cifras;
+  document.getElementById('pdf-conclusion').innerHTML=generarConclusion(uPrecio,uArr,refCap);
+  window.print();
+}
+
+function generarConclusion(uPrecio,uArr,refCap){
+  if(uPrecio<=0){
+    return `<p>Tu propiedad tiene un valor de mercado estimado de <b>UF ${_fmtUF(currentUF)}</b>, calculado con la UF del día, el precio por m² de la zona y su cap rate de referencia (${refCap}%). Ingresa tu precio en el simulador para obtener el análisis comparativo completo.</p>`;
+  }
+  const diff=((uPrecio-currentUF)/currentUF)*100;
+  let nivelPrecio,pPrecio;
+  if(diff>8){nivelPrecio='caro';pPrecio=`Tu precio está ${diff.toFixed(0)}% por sobre el valor estimado de mercado. En esa franja, una propiedad tiende a quedarse meses publicada antes de ajustar.`;}
+  else if(diff>=-2){nivelPrecio='justo';pPrecio=`Tu precio está alineado con el valor de mercado (${diff>0?'+':''}${diff.toFixed(1)}%). Es una cifra defendible frente a un comprador o una tasación.`;}
+  else {nivelPrecio='barato';pPrecio=`Tu precio está ${Math.abs(diff).toFixed(0)}% bajo el valor estimado de mercado. Como entrada, es una compra por debajo de lo que la zona sostiene.`;}
+
+  let html=`<p>${pPrecio}</p>`;
+  let nivelRenta=null;
+  if(uArr>0){
+    const tuCap=(uArr*12)/(uPrecio*UF)*100;
+    let pRenta;
+    if(tuCap>=refCap+0.5){nivelRenta='alto';pRenta=`El arriendo que proyectas rinde ${tuCap.toFixed(1)}%, por sobre el ${refCap}% de referencia de la zona. El flujo es atractivo para esta comuna.`;}
+    else if(tuCap>refCap-0.5){nivelRenta='medio';pRenta=`El arriendo que proyectas rinde ${tuCap.toFixed(1)}%, en línea con el ${refCap}% de referencia de la zona.`;}
+    else {nivelRenta='bajo';pRenta=`El arriendo que proyectas rinde ${tuCap.toFixed(1)}%, bajo el ${refCap}% de referencia de la zona. Acá el negocio vive más en la plusvalía que en la renta.`;}
+    html+=`<p>${pRenta}</p>`;
+  }
+
+  const V={
+    'barato_bajo':'Buena compra por precio, rendimiento modesto. Una jugada de plusvalía más que de flujo.',
+    'barato_medio':'Compra por debajo del mercado con un flujo razonable. Una entrada sólida.',
+    'barato_alto':'Precio de entrada y buen flujo a la vez. El tipo de operación que conviene mirar en serio.',
+    'justo_bajo':'Precio correcto, aunque el flujo queda corto. El retorno dependerá de la plusvalía.',
+    'justo_medio':'Precio y flujo en línea con el mercado. Una operación estándar.',
+    'justo_alto':'Precio de mercado con un flujo por sobre la zona. Negocio equilibrado.',
+    'caro_bajo':'Precio sobre el mercado y flujo bajo la zona. La operación necesita una revisión a fondo.',
+    'caro_medio':'Estás pagando sobre el valor de mercado. Conviene ajustar el precio antes de avanzar.',
+    'caro_alto':'Pagas sobre el mercado, aunque el flujo lo compensa en parte. Hay espacio para negociar el precio.'
+  };
+  const Vsolo={'barato':'Tu precio está bajo el valor de mercado. Como compra, es una buena entrada.','justo':'Tu precio está alineado con el mercado. Es una base defendible para negociar.','caro':'Tu precio está sobre el valor de mercado. Conviene revisarlo antes de publicar u ofertar.'};
+  const veredicto=nivelRenta?V[nivelPrecio+'_'+nivelRenta]:Vsolo[nivelPrecio];
+  html+=`<div class="pdf-verdict">${veredicto}</div>`;
+  return html;
+}
+
 // Init
+function ajustarHero(){
+  const nav=document.querySelector('nav');
+  const hero=document.querySelector('.hero-result');
+  if(nav&&hero){ hero.style.top=nav.offsetHeight+'px'; }
+}
 window.onload=()=>{
   fetchUF();
   cargarUbicaciones();cambiarTipo();
+  ajustarHero();
   document.querySelectorAll('input[type=range]').forEach(el=>syncSlider(el,el.id==='m2util'?'lbl-m2util':el.id==='terraza'?'lbl-terraza':el.id==='estac'?'lbl-estac':el.id==='m2const'?'lbl-const':el.id==='m2terreno'?'lbl-terreno':'lbl-terrenom2',el.id==='estac'?'':'m²'));
 };
+window.addEventListener('resize',ajustarHero);
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(ajustarHero);}
 </script>
 
 <div class="sticky-footer">
   UN PRODUCTO <svg style="display:inline-block;vertical-align:middle;width:14px;height:14px;margin:0 4px;" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg"><path d="M1025.221,809.212l-0.11,0l0,81.085c0,28.636 -10.8,55.209 -31.8,75.424c-21.177,20.215 -49.53,31.502 -79.281,31.502l-627.255,-0c-29.747,0 -58.286,-11.287 -79.268,-31.502c-21.004,-20.215 -32.726,-47.673 -32.726,-76.309l0,-428.208c0,-36.048 18.716,-69.739 49.867,-89.786c74.023,-47.503 232.776,-149.249 313.62,-201.133c37.627,-24.088 86.641,-24.088 124.267,0c80.857,51.885 239.595,153.631 313.626,201.133c27.372,17.614 45.15,45.762 49.061,76.787l0,361.008Zm-424.738,28.542c62.258,0 111.248,-23.16 146.913,-69.476c30.045,-38.496 45.224,-84.812 45.538,-138.952c0.314,-54.454 -14.238,-101.084 -43.654,-139.891c-35.038,-46.319 -83.571,-69.476 -145.515,-69.476l-196.702,0c14.409,64.155 21.599,133.788 21.599,208.897c0,75.108 -7.19,144.742 -21.599,208.899l193.421,0Zm-81.688,-88.253l0,-131.443c0,-50.385 9.473,-93.338 28.39,-128.861c18.945,-35.52 43.112,-53.278 72.529,-53.278c5.621,0 10.785,0.625 15.493,1.877c22.227,5.007 39.203,24.175 50.93,57.504c11.727,33.331 14.323,78.318 7.761,134.964c-6.591,56.018 -23.339,102.023 -50.245,138.014c-26.906,35.988 -53.184,53.983 -78.863,53.983c-13.781,0 -24.88,-6.103 -33.326,-18.306c-8.446,-12.206 -12.668,-30.358 -12.668,-54.454Z" style="fill:#ed2739;"/></svg> <a href="https://www.dunamis.broker" target="_blank">DUNAMIS BROKER</a>
+</div>
+<div id="pdf-sheet">
+  <img class="pdf-logo" src="/dunamis-logo-rojo-2026.png" alt="Dunamis Broker">
+  <div class="pdf-eyebrow">VALOR · Simulador de valorización</div>
+  <div class="pdf-h1">Análisis de valorización</div>
+  <div class="pdf-meta" id="pdf-fecha"></div>
+
+  <div class="pdf-section-t">Propiedad analizada</div>
+  <div id="pdf-resumen" style="font-size:14px;color:#333;line-height:1.6"></div>
+
+  <div class="pdf-section-t">Cifras</div>
+  <div class="pdf-grid" id="pdf-cifras"></div>
+
+  <div class="pdf-section-t">Conclusión</div>
+  <div class="pdf-concl" id="pdf-conclusion"></div>
+
+  <div class="pdf-cta">
+    <div class="t">¿Quieres una valorización profesional?</div>
+    <div class="c">Jessica Hupat<br>+56 9 5408 0296 &nbsp;·&nbsp; ventas@dunamispropiedades.com</div>
+  </div>
+
+  <div class="pdf-foot">Estimación referencial construida con la UF del día, el precio por m² y la vacancia por zona. No constituye una tasación formal. · VALOR · dunamis.broker</div>
 </div>
 </body>
 </html>
